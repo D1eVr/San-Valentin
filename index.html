@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>San Valentín 💘</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap");
+
+      :root{
+        --bg1:#ffb3c7;
+        --bg2:#ffd6e3;
+
+        --text:#201b22;
+        --muted:#6b6270;
+
+        --shadow: 0 18px 50px rgba(0,0,0,.14);
+        --shadow2: 0 10px 26px rgba(0,0,0,.12);
+
+        --pink2:#ff2f6f;
+
+        --paper:#ffffff;
+        --paper2:#fff3f7;
+        --paperLine:#ffd3df;
+
+        --envBack1:#ff9fb1;
+        --envBack2:#ff6f8c;
+
+        --envFront1:#fff6f9;
+        --envFront2:#ffe3ec;
+
+        --envSide1:#fffafc;
+        --envSide2:#ffdbe6;
+
+        --flap1:#ff9fb1;
+        --flap2:#ff6f8c;
+      }
+
+      *{box-sizing:border-box}
+      html,body{height:100%}
+
+      body{
+        margin:0;
+        font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color:var(--text);
+        overflow:hidden;
+        background:
+          radial-gradient(1200px 900px at 15% 10%, rgba(255,255,255,.55), transparent 60%),
+          radial-gradient(900px 700px at 80% 30%, rgba(255,255,255,.35), transparent 55%),
+          linear-gradient(135deg, var(--bg1), var(--bg2));
+      }
+
+      .grain{
+        pointer-events:none;
+        position:fixed; inset:-40%;
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
+        transform:rotate(10deg);
+        mix-blend-mode:soft-light;
+        opacity:.36;
+      }
+
+      .wrap{
+        height:100%;
+        display:grid;
+        place-items:center;
+        padding:18px;
+      }
+
+      .stage{
+        width:min(860px, 96vw);
+        text-align:center;
+      }
+
+      .headline{
+        font-weight:900;
+        letter-spacing:-.02em;
+        font-size:clamp(26px, 4.8vw, 44px);
+        margin:0 0 80px;
+      }
+
+      .sub{
+        margin:0 0 18px;
+        color:rgba(107,98,112,.92);
+        font-weight:650;
+        font-size:clamp(13px, 2.2vw, 16px);
+      }
+
+      /* ===== Envelope scene (REAL STACK) ===== */
+      .envScene{
+        position:relative;
+        width:min(560px, 92vw);
+        margin: 0 auto 10px;
+        display:grid;
+        place-items:center;
+      }
+
+      .envBox{
+        position:relative;
+        width:100%;
+        aspect-ratio: 16 / 10;
+        max-height: 390px;
+        transform: translateZ(0);
+      }
+
+      /* Confetti */
+      .confettiLayer{
+        pointer-events:none;
+        position:absolute;
+        inset:-25% -10% -10% -10%;
+        overflow:hidden;
+        opacity:0;
+        z-index:50;
+      }
+      .confetti{
+        position:absolute;
+        width:10px;height:16px;
+        border-radius:3px;
+        top:-40px;
+        left:50%;
+        transform: translateX(-50%);
+        animation: fall linear forwards;
+        filter: drop-shadow(0 10px 12px rgba(0,0,0,.12));
+      }
+      @keyframes fall{
+        0%{transform: translateX(-50%) translateY(-10px) rotate(0deg); opacity:0}
+        10%{opacity:1}
+        100%{transform: translateX(calc(-50% + var(--dx))) translateY(720px) rotate(560deg); opacity:0}
+      }
+
+      /* Envelope drop shadow (applies to the whole thing) */
+      .envShadow{
+        position:absolute;
+        inset:0;
+        filter: drop-shadow(0 18px 28px rgba(0,0,0,.14));
+        pointer-events:none;
+      }
+
+      /* Layer 1: BACK */
+      .layerBack{
+        position:absolute;
+        inset:0;
+        z-index:1;
+        pointer-events:none;
+      }
+
+      /* Layer 2: PAPER (must be above top edge) */
+      .layerPaper{
+        position:absolute;
+        inset:0;
+        z-index:3; /* above back */
+        pointer-events:none;
+      }
+
+      .paper{
+        position:absolute;
+        left:50%;
+        bottom:15%;
+
+        width:min(67%, 450px);
+        height:80%;
+
+        transform: translateX(-50%) translateY(90px);
+        opacity:0;
+
+        border-radius:16px;
+        background: linear-gradient(180deg, var(--paper), var(--paper2));
+        border:1px solid rgba(255,190,205,.95);
+        box-shadow: 0 14px 30px rgba(0,0,0,.12);
+        overflow:hidden;
+      }
+
+      .paper::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        background:
+          radial-gradient(240px 180px at 20% 10%, rgba(255,47,111,.10), transparent 60%),
+          radial-gradient(260px 180px at 80% 10%, rgba(255,47,111,.08), transparent 62%);
+      }
+
+      .paperText{
+        position:absolute;
+        inset:0;
+        padding:14px 16px 16px;   /* ↑ menos padding arriba */
+        display:grid;
+        align-content:start;
+        gap:8px;                  /* ↑ menos separación */
+        text-align:left;
+      }
+      .paperText h2{
+        margin:0;
+        font-size:clamp(18px, 3.3vw, 22px);
+        font-weight:900;
+        letter-spacing:-.01em;
+        text-align:center;        /* ✅ “Muejeje” centrado */
+      }
+      .paperLine{
+        width:100%;
+        height:1px;
+        background: linear-gradient(90deg, transparent, var(--paperLine), transparent);
+        margin-top:2px;
+      }
+      .paperText p{
+        margin:0;
+        font-size:clamp(13px, 2.35vw, 15px);
+        line-height:1.5;
+        color: rgba(40,33,44,.92);
+        font-weight:650;
+      }
+      .signature{
+        margin-top:2px;           /* ↑ sube un poquito la firma */
+        font-weight:900;
+        color: var(--pink2);
+      }
+
+      /* Layer 3: FLAP (special behavior) */
+      .layerFlap{
+        position:absolute;
+        inset:0;
+        z-index:6; /* closed: above paper */
+        pointer-events:none;
+        transform-style:preserve-3d;
+      }
+
+      /* CLOSED: flap above paper. OPEN: flap goes BEHIND paper */
+      .envScene.open .layerFlap{
+        z-index:2; /* behind paper (paper is z=3) */
+      }
+
+      .flapGroup{
+        transform-origin: 50% 26%;
+        transform-box: fill-box;
+        transform: rotateX(0deg);
+        transition: transform .25s ease;
+      }
+
+      .envScene.open .flapGroup{
+        transform: rotateX(170deg);
+        transition: transform .7s cubic-bezier(.2,.9,.2,1);
+      }
+
+      .sealGroup{
+        transform-origin: 50% 50%;
+        transform-box: fill-box;
+        opacity:1;
+        transform: scale(1);
+        transition: opacity .25s ease, transform .25s ease;
+      }
+      .envScene.open .sealGroup{
+        opacity:0;
+        transform: scale(.92);
+      }
+
+      /* Layer 4: FRONT (must cover bottom of paper always) */
+      .layerFront{
+        position:absolute;
+        inset:0;
+        z-index:8; /* always on top of everything envelope-related */
+        pointer-events:none;
+      }
+
+      /* OPEN state: paper moves OUT (más arriba para que se lea) */
+      .envScene.open .paper{
+        opacity:1;
+        transform: translateX(-50%) translateY(-95px); /* ✅ sube más */
+        transition: transform .75s cubic-bezier(.2,.9,.2,1), opacity .25s ease .08s;
+      }
+
+      .envScene.open .confettiLayer{
+        opacity:1;
+        transition: opacity .2s ease;
+      }
+
+      /* Controls */
+      .controls{
+        width:min(520px, 92vw);
+        margin-inline:auto;
+        height: 100px;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:14px;
+        position:relative;
+      }
+      .btn{
+        border:0;
+        font-family:inherit;
+        font-weight:900;
+        font-size:18px;
+        padding:14px 28px;
+        border-radius:16px;
+        cursor:pointer;
+        transition: transform .12s ease, filter .12s ease;
+        box-shadow: var(--shadow2);
+        position:relative;
+        user-select:none;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        min-width:120px;
+        z-index:2;
+      }
+      .btn:active{transform: translateY(1px) scale(.98)}
+      .btn:hover{filter:brightness(1.03)}
+      .btnYes{background: linear-gradient(135deg, #25d366, #16a34a); color:#fff; z-index:3;}
+      .btnNo{background: linear-gradient(135deg, #ff6b8a, #ff2b55); color:#fff; z-index:2;}
+      .btn::after{
+        content:"";
+        position:absolute; inset:-2px;
+        border-radius:18px;
+        border:1px solid rgba(255,255,255,.35);
+        pointer-events:none;
+      }
+      .controls.moving{position:relative}
+      .controls.moving #noBtn{position:absolute}
+
+      @media (max-width:520px){
+        .btn{font-size:17px; padding:13px 22px; min-width:112px}
+        .controls{height:104px}
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grain"></div>
+
+    <div class="wrap">
+      <div class="stage">
+        <h1 class="headline">¿Quieres ser mi San Valentín? 💘</h1>
+
+        <div class="envScene" id="envScene">
+          <div class="envBox">
+            <div class="confettiLayer" id="confettiLayer"></div>
+
+            <div class="envShadow">
+              <!-- Layer: BACK -->
+              <div class="layerBack">
+                <svg viewBox="0 0 800 500" aria-hidden="true" style="width:100%;height:100%">
+                  <defs>
+                    <linearGradient id="backGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="var(--envBack1)"/>
+                      <stop offset="1" stop-color="var(--envBack2)"/>
+                    </linearGradient>
+                    <linearGradient id="backGloss" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="rgba(255,255,255,.26)"/>
+                      <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+                    </linearGradient>
+                  </defs>
+
+                  <rect x="70" y="70" width="660" height="360" rx="26" fill="rgba(255,255,255,.50)"/>
+                  <rect x="120" y="120" width="560" height="280" rx="22" fill="url(#backGrad)"/>
+                  <rect x="120" y="120" width="560" height="280" rx="22" fill="url(#backGloss)"/>
+                  <rect x="120.5" y="120.5" width="559" height="279" rx="22" fill="none" stroke="rgba(255,255,255,.28)"/>
+                </svg>
+              </div>
+
+              <!-- Layer: PAPER -->
+              <div class="layerPaper">
+                <div class="paper" id="paper">
+                  <div class="paperText">
+                    <h2>Muejeje</h2>
+                    <div class="paperLine"></div>
+                    <p>
+                      Eres lo mejor que pude desear y la mujer de mi sueños, me haces mis días más felices y completos,
+                      quiero seguir conociéndote, aprendiendo de ti y compartiendo momentos juntos.
+                    </p>
+                    <p class="signature">Con mucho amor, Diego ❤️</p>
+                  </div>
+                </div>
+              </div>    
+
+              <!-- Layer: FLAP -->
+              <div class="layerFlap">
+                <svg viewBox="0 0 800 500" aria-hidden="true" style="width:100%;height:100%">
+                  <defs>
+                    <linearGradient id="flapGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="var(--flap1)"/>
+                      <stop offset="1" stop-color="var(--flap2)"/>
+                    </linearGradient>
+                  </defs>
+
+                  <g class="flapGroup">
+                    <polygon points="120,120 680,120 400,290" fill="url(#flapGrad)" opacity="0.98"/>
+                    <polygon points="120,120 680,120 400,290" fill="rgba(255,255,255,.10)"/>
+                  </g>
+
+                  <g class="sealGroup">
+                    <circle cx="400" cy="330" r="28" fill="rgba(255,255,255,.16)"/>
+                    <path d="M400 350
+                             C400 350, 360 325, 360 300
+                             C360 285, 372 275, 386 275
+                             C395 275, 404 281, 400 290
+                             C396 281, 405 275, 414 275
+                             C428 275, 440 285, 440 300
+                             C440 325, 400 350, 400 350Z"
+                          fill="#ff2b55"/>
+                    <path d="M400 346
+                             C400 346, 366 323, 366 302
+                             C366 290, 375 282, 386 282
+                             C394 282, 400 286, 400 292
+                             C400 286, 406 282, 414 282
+                             C425 282, 434 290, 434 302
+                             C434 323, 400 346, 400 346Z"
+                          fill="rgba(255,255,255,.18)"/>
+                  </g>
+                </svg>
+              </div>
+
+              <!-- Layer: FRONT -->
+              <div class="layerFront">
+                <svg viewBox="0 0 800 500" aria-hidden="true" style="width:100%;height:100%">
+                  <defs>
+                    <linearGradient id="frontGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="var(--envFront1)"/>
+                      <stop offset="1" stop-color="var(--envFront2)"/>
+                    </linearGradient>
+                    <linearGradient id="sideGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="var(--envSide1)"/>
+                      <stop offset="1" stop-color="var(--envSide2)"/>
+                    </linearGradient>
+                  </defs>
+
+                  <polygon points="120,400 120,200 400,320" fill="url(#sideGrad)" opacity="0.98"/>
+                  <polygon points="680,400 680,200 400,320" fill="url(#sideGrad)" opacity="0.98"/>
+
+                  <polygon points="120,400 400,260 680,400" fill="url(#frontGrad)" opacity="0.98"/>
+                  <polygon points="120,400 400,260 680,400" fill="rgba(255,255,255,.10)"/>
+
+                  <rect x="120.5" y="120.5" width="559" height="279" rx="22"
+                        fill="none" stroke="rgba(255,255,255,.35)" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls" id="controls">
+          <button class="btn btnYes" id="yesBtn">Sí</button>
+          <button class="btn btnNo" id="noBtn">No</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const envScene = document.getElementById("envScene");
+      const yesBtn = document.getElementById("yesBtn");
+      const noBtn = document.getElementById("noBtn");
+      const controls = document.getElementById("controls");
+      const confettiLayer = document.getElementById("confettiLayer");
+
+      let noDetached = false;
+
+      function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+      function detachNoIfNeeded(){
+        if (noDetached) return;
+
+        const c = controls.getBoundingClientRect();
+        const b = noBtn.getBoundingClientRect();
+
+        const leftIn = b.left - c.left;
+        const topIn  = b.top  - c.top;
+
+        controls.classList.add("moving");
+        noBtn.style.left = leftIn + "px";
+        noBtn.style.top  = topIn  + "px";
+        noBtn.style.margin = "0";
+        noDetached = true;
+      }
+
+      function moveNo(){
+        if (envScene.classList.contains("open")) return;
+
+        detachNoIfNeeded();
+
+        const c = controls.getBoundingClientRect();
+        const b = noBtn.getBoundingClientRect();
+        const yes = yesBtn.getBoundingClientRect();
+
+        const pad = 6;
+        const maxX = c.width - b.width - pad;
+        const maxY = c.height - b.height - pad;
+
+        for (let tries=0; tries<50; tries++){
+          const x = clamp(Math.random()*maxX, pad, maxX);
+          const y = clamp(Math.random()*maxY, pad, maxY);
+
+          const candLeft = c.left + x;
+          const candTop  = c.top + y;
+          const candRight = candLeft + b.width;
+          const candBottom = candTop + b.height;
+
+          const intersectsYes =
+            !(candRight < yes.left || candLeft > yes.right || candBottom < yes.top || candTop > yes.bottom);
+
+          if (!intersectsYes){
+            noBtn.style.left = x + "px";
+            noBtn.style.top  = y + "px";
+            yesBtn.style.zIndex = "3";
+            noBtn.style.zIndex = "2";
+            return;
+          }
+        }
+
+        noBtn.style.left = clamp((c.width - b.width - pad), pad, maxX) + "px";
+        noBtn.style.top  = clamp(pad, pad, maxY) + "px";
+        yesBtn.style.zIndex = "3";
+        noBtn.style.zIndex = "2";
+      }
+
+      function makeConfettiPiece(){
+        const el = document.createElement("div");
+        el.className = "confetti";
+
+        const colors = [
+          "linear-gradient(180deg,#ffffff,#ffd0dd)",
+          "linear-gradient(180deg,#ff6b8a,#ff2b55)",
+          "linear-gradient(180deg,#25d366,#16a34a)",
+          "linear-gradient(180deg,#ffd86b,#ff8ab0)",
+          "linear-gradient(180deg,#9bffdf,#6ee7b7)"
+        ];
+
+        const w = 6 + Math.random()*10;
+        const h = 10 + Math.random()*14;
+        el.style.width = w + "px";
+        el.style.height = h + "px";
+        el.style.background = colors[(Math.random()*colors.length)|0];
+
+        el.style.left = (Math.random()*100) + "%";
+        el.style.setProperty("--dx", (Math.random()*560 - 280) + "px");
+
+        const dur = 1.8 + Math.random()*1.7;
+        el.style.animationDuration = dur + "s";
+
+        confettiLayer.appendChild(el);
+        setTimeout(()=>el.remove(), dur*1000 + 250);
+      }
+
+      function burstConfetti(){
+        for (let i=0;i<64;i++) setTimeout(makeConfettiPiece, i*14);
+      }
+
+      function openEnv(){
+        if (envScene.classList.contains("open")) return;
+        envScene.classList.add("open");
+        burstConfetti();
+      }
+
+      noBtn.addEventListener("pointerdown", (e)=>{ e.preventDefault(); moveNo(); });
+      noBtn.addEventListener("click", (e)=>{ e.preventDefault(); moveNo(); });
+      yesBtn.addEventListener("click", (e)=>{ e.preventDefault(); openEnv(); });
+
+      window.addEventListener("resize", ()=>{
+        if (!noDetached) return;
+
+        const c = controls.getBoundingClientRect();
+        const b = noBtn.getBoundingClientRect();
+        const pad = 6;
+
+        const maxX = c.width - b.width - pad;
+        const maxY = c.height - b.height - pad;
+
+        const curL = parseFloat(noBtn.style.left || "0");
+        const curT = parseFloat(noBtn.style.top  || "0");
+
+        noBtn.style.left = clamp(curL, pad, maxX) + "px";
+        noBtn.style.top  = clamp(curT, pad, maxY) + "px";
+
+        yesBtn.style.zIndex = "3";
+        noBtn.style.zIndex = "2";
+      });
+    </script>
+  </body>
+</html>
